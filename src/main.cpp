@@ -229,7 +229,7 @@ void setup() {
   //lv_obj_align( label, LV_ALIGN_CENTER, 0, -20 );
 
 
-  wifi_ap_list_screen();
+  // wifi_ap_list_screen();
   //wifi_manual_ssid_input_screen();
   //wifi_password_input_screen();
   //wifi_start_screen();
@@ -240,9 +240,30 @@ void setup() {
   //lv_example_keyboard_1();
 
 }
-
+#include "RobotoBold.c"
 void loop() {
+  static lv_obj_t *value_label = NULL; // Label to display the numeric value
+  static float value = 0.0;            // The numeric value to display
 
+  // Create the label only once
+  if (value_label == NULL) {
+      value_label = lv_label_create(lv_scr_act()); // Create label on the active screen
+      lv_obj_set_style_text_font(value_label, &RobotoBold, 0); // Use the custom large font
+      lv_obj_align(value_label, LV_ALIGN_CENTER, 0, 0); // Center the label on the screen
+  }
 
+  // Update the label text
+  char value_text[10];
+  snprintf(value_text, sizeof(value_text), "%.1f", value); // Format the value as "0.0"
+  lv_label_set_text(value_label, value_text); // Update the label text
+
+  // Increment the value
+  value += 0.1;
+  if (value >= 20.0) {
+      value = 0.0; // Reset to 0.0 after reaching 19.9
+  }
+
+  // Handle LVGL tasks
+  lv_task_handler();
+  delay(100); // Delay to control the update speed (adjust as needed)
 }
-
